@@ -6,12 +6,12 @@ namespace Financeiro.Domain.Entities;
 public class Meta
 {
     public long Id { get; private set; }
-    public decimal ValorObjetivo { get; private set; }
     public DateTime DataFinal { get; private set; }
     public int OrcamentoId { get; private set; }
-    public decimal ValorAporte { get; private set; }
     public PeriodicidadeAporteEnum Periodicidade { get; private set; }
     public string Descricao { get; private set; }
+    public decimal ValorObjetivo { get; private set; }
+    public decimal ValorAporte { get; private set; }
     public int UsuarioId { get; private set; }
     public StatusAtualEnum Status { get; private set; }
 

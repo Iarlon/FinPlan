@@ -7,23 +7,12 @@ public class Orcamento
 {
     public long Id { get; private set; }
     public int UsuarioId { get; private set; }
-    public DateTime Periodo { get; private set; }
     public decimal SaldoConta { get; private set; } = decimal.Zero;
 
     public Orcamento(int usuarioId, DateTime periodo)
     {
-        DefineUsuarioId(usuarioId);
-        AlterarPeriodo(periodo);
-   
+        DefineUsuarioId(usuarioId);   
     }
-
-    public void AlterarPeriodo(DateTime dataReferencia)
-    {
-        if (dataReferencia.Year < 2000)
-            throw new DomainException("O ano do orçamento é inválido.");
-        Periodo = new DateTime(dataReferencia.Year, dataReferencia.Month, 1);
-    }
-
     public void DefineUsuarioId(int usuarioId)
     {
         if (usuarioId <= 0)

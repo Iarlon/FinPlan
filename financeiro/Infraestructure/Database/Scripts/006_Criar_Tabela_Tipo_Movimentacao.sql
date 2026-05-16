@@ -1,0 +1,4 @@
+CREATE TABLE tipo_movimentacao (
+	id BIGSERIAL PRIMARY KEY,
+	descricao VARCHAR(100) NOT NULL UNIQUE
+);

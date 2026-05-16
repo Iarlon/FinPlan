@@ -1,7 +1,6 @@
 using Financeiro.Domain.Entities;
-using Financeiro.Domain.Enums;
 
-namespace financeiro.Domain.Repository;
+namespace Financeiro.Domain.Repository;
 
 public interface IOrcamentoRepository
 {

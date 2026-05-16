@@ -15,7 +15,7 @@ public class Movimentacao : Entity
     public string? Descricao { get; private set; }
     public decimal Valor { get; private set; }
     public CategoriaEnum Categoria { get; private set; }
-    public DateTime Data { get; private set; }
+    public DateTime DataMovimentacao { get; private set; }
     public TipoMovimentacaoEnum Tipo { get; private set; }
 
     public Movimentacao(
@@ -23,7 +23,9 @@ public class Movimentacao : Entity
         CategoriaEnum categoria,
         int orcamentoId,
         int usuarioId,
-        TipoMovimentacaoEnum tipo
+        TipoMovimentacaoEnum tipo,
+        string? Descricao,
+        string? Tag
         )
     {
         AlterarTipo(tipo);
@@ -31,9 +33,23 @@ public class Movimentacao : Entity
         DefinirValor(valor);
         DefinirOrcamentoId(orcamentoId);
         DefinirUsuarioId(usuarioId);
-        DefinirDataCriacao();
+        DefinirDataMovimentacao(null);
+        AlterarDescricao(Descricao);
+        AlterarTag(Tag);
 
         AddDomainEvent(new MovimentacaoCriadaEvent(this));
+    }
+
+    public static Movimentacao CriarMovimentacao(
+        decimal valor,
+        CategoriaEnum categoria,
+        int orcamentoId,
+        int usuarioId,
+        TipoMovimentacaoEnum tipo,
+        string? descricao,
+        string? tag)
+    {
+        return new Movimentacao(valor, categoria, orcamentoId, usuarioId, tipo, descricao, tag);
     }
     public void AlterarTag(string tag)
     {
@@ -61,12 +77,11 @@ public class Movimentacao : Entity
 
     public void AlterarData(DateTime? data)
     {
-        Data = data ?? DateTime.UtcNow;
+        DataMovimentacao = data ?? DateTime.UtcNow;
     }
-
-    private void DefinirDataCriacao()
+    private void DefinirDataMovimentacao(DateTime? data)
     {
-        Data = DateTime.UtcNow;
+        DataMovimentacao = data ?? DateTime.UtcNow;
     }
 
     private void DefinirUsuarioId(int orcamentoId)

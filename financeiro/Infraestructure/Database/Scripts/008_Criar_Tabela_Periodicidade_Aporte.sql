@@ -1,0 +1,4 @@
+CREATE TABLE periodicidade_aporte (
+	id BIGSERIAL PRIMARY KEY,
+	descricao VARCHAR(100) NOT NULL UNIQUE
+);

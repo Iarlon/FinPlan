@@ -2,15 +2,18 @@ using Dapper;
 using financeiro.Domain.Repository;
 using financeiro.Infraestructure.Database;
 using Financeiro.Domain.Entities;
+using Financeiro.Domain.Repository;
+using Financeiro.Infraestructure.Database;
 
-namespace financeiro.Infraestructure.Repository;
+namespace Financeiro.Infraestructure.Repository;
 
 public class OrcamentoRepository : IOrcamentoRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
-    public OrcamentoRepository(IDbConnectionFactory connectionFactory)
+    private readonly IUnitOfWork _uow;
+
+    public OrcamentoRepository(IUnitOfWork uow)
     {
-        _connectionFactory = connectionFactory;
+        _uow = uow;
     }
     public async Task AtualizarOrcamento(Orcamento orcamento)
     {
@@ -22,8 +25,7 @@ public class OrcamentoRepository : IOrcamentoRepository
             SET saldo_conta = @Valor
             WHERE ID = @Id
             ";
-        using var connection = _connectionFactory.CreateConnection();
-        await connection.ExecuteAsync(sql, new {
+        await _uow.Connection.ExecuteAsync(sql, new {
             orcamento.Id,
             Valor = orcamento.SaldoConta
         });
@@ -33,8 +35,7 @@ public class OrcamentoRepository : IOrcamentoRepository
     {
         var sql = @"SELECT * FROM ORCAMENTO WHERE ID = @Id";
 
-        using var connection = _connectionFactory.CreateConnection();
-        var orcamento = await connection.QueryFirstOrDefaultAsync<Orcamento>(sql, new { Id = id });
+        var orcamento = await _uow.Connection.QueryFirstOrDefaultAsync<Orcamento>(sql, new { Id = id });
 
         return orcamento;
     }

@@ -15,11 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Infraestructure\Database\Scripts\001_Criar_Tabela_Usuario.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Infraestructure\Database\Scripts\001_Criar_Tabela_Usuario.sql" />
+    <None Include="Infraestructure\Database\Scripts\**\*.sql" />
   </ItemGroup>
 
   <ItemGroup>

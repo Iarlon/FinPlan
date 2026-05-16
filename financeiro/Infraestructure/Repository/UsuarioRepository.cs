@@ -2,16 +2,17 @@ using Dapper;
 using financeiro.Domain.Repository;
 using financeiro.Infraestructure.Database;
 using Financeiro.Domain.Entities;
+using Financeiro.Infraestructure.Database;
 
 namespace financeiro.Infraestructure.Repository;
 
 public class UsuarioRepository : IUsuarioRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
+    private readonly IUnitOfWork _uow;
 
-    public UsuarioRepository(IDbConnectionFactory connectionFactory)
+    public UsuarioRepository(IUnitOfWork uow)
     {
-        _connectionFactory = connectionFactory;
+        _uow = uow;
     }
 
     public async Task CriarUsuario(Usuario usuario)
@@ -19,9 +20,7 @@ public class UsuarioRepository : IUsuarioRepository
         var sql = @"
             INSERT INTO USUARIO (nome, email, senha)
             VALUES (@Nome, @Email, @Senha)";
-
-        using var connection = _connectionFactory.CreateConnection();
-        await connection.ExecuteAsync(sql, usuario);
+        await _uow.Connection.ExecuteAsync(sql, usuario);
     }
 
     public async Task<bool> EmailJaExiste(string email)
@@ -30,10 +29,7 @@ public class UsuarioRepository : IUsuarioRepository
         SELECT EXISTS (
             SELECT 1 FROM USUARIO WHERE Email = @Email COLLATE NOCASE
         )";
-
-        using var connection = _connectionFactory.CreateConnection();
-
-        var existe = await connection.ExecuteScalarAsync<bool>(
+        var existe = await _uow.Connection.ExecuteScalarAsync<bool>(
         sql,
         new { Email = email }
     );
@@ -50,16 +46,16 @@ public class UsuarioRepository : IUsuarioRepository
         WHERE id = @Id
         ";
 
-        using var connection = _connectionFactory.CreateConnection();
-        await connection.ExecuteAsync(sql, usuario);
+       
+        await _uow.Connection.ExecuteAsync(sql, usuario);
     }
 
     public async Task<Usuario?> ObterUsuarioPorId(int id)
     {
         var sql = @"SELECT * FROM USUARIO WHERE ID = @Id";
 
-        using var connection = _connectionFactory.CreateConnection();
-        var usuario = await connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { Id = id });
+       
+        var usuario = await _uow.Connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { Id = id });
 
         return usuario;
     }

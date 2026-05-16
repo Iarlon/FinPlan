@@ -1,8 +1,8 @@
 using financeiro.Application.Contract;
 using financeiro.Domain.Events;
-using financeiro.Domain.Repository;
+using Financeiro.Domain.Repository;
 
-namespace financeiro.Application.Handles;
+namespace Financeiro.Application.Handles;
 
 public class AtualizarSaldoContaOrcamentoHandler
     : IDomainEventHandler<MovimentacaoCriadaEvent>
