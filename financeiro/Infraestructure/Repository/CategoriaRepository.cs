@@ -11,13 +11,11 @@ public class CategoriaRepository : ICategoriaRepository
     
         public CategoriaRepository(IUnitOfWork uow) => _uow = uow;
     
-        public Task<CategoriaEnum?> ObterCategoriaPorId(int categoria)
+        public Task<CategoriaEnum?> ObterCategoriaPorId(int id)
         {
             var sql = @"
-                SELECT id, nome
-                FROM CATEGORIA
-                WHERE id = @Id
+                SELECT id, nome, eh_receita AS EhReceita FROM categorias WHERE id = @Id
             ";
-            return _uow.Connection.QueryFirstOrDefaultAsync<CategoriaEnum?>(sql, new { Id = categoria });
+            return _uow.Connection.QueryFirstOrDefaultAsync<CategoriaEnum?>(sql, new { Id = id }, _uow.Transaction);
     }
 }

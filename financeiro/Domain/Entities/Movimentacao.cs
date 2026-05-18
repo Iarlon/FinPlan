@@ -1,6 +1,5 @@
 using Financeiro.Domain.Enums;
 using Financeiro.Domain.Exceptions;
-using Financeiro.Domain.Policies;
 using financeiro.Domain.Events;
 using financeiro.Domain.Common;
 
@@ -14,21 +13,19 @@ public class Movimentacao : Entity
     public string? Tag { get; private set; }
     public string? Descricao { get; private set; }
     public decimal Valor { get; private set; }
-    public CategoriaEnum Categoria { get; private set; }
+    public Categoria Categoria { get; private set; }
     public DateTime DataMovimentacao { get; private set; }
     public TipoMovimentacaoEnum Tipo { get; private set; }
 
     public Movimentacao(
         decimal valor,
-        CategoriaEnum categoria,
+        Categoria categoria,
         int orcamentoId,
         int usuarioId,
-        TipoMovimentacaoEnum tipo,
         string? Descricao,
         string? Tag
         )
     {
-        AlterarTipo(tipo);
         DefinirCategoria(categoria);
         DefinirValor(valor);
         DefinirOrcamentoId(orcamentoId);
@@ -42,14 +39,14 @@ public class Movimentacao : Entity
 
     public static Movimentacao CriarMovimentacao(
         decimal valor,
-        CategoriaEnum categoria,
+        Categoria categoria,
         int orcamentoId,
         int usuarioId,
         TipoMovimentacaoEnum tipo,
         string? descricao,
         string? tag)
     {
-        return new Movimentacao(valor, categoria, orcamentoId, usuarioId, tipo, descricao, tag);
+        return new Movimentacao(valor, categoria, orcamentoId, usuarioId, descricao, tag);
     }
     public void AlterarTag(string tag)
     {
@@ -92,31 +89,37 @@ public class Movimentacao : Entity
         UsuarioId = orcamentoId;
     }
 
-    private void AlterarCategoria(CategoriaEnum novaCategoria)
+    public void AlterarCategoria(Categoria novaCategoria)
     {
-        if (Categoria == novaCategoria)
+        if (novaCategoria == null)
+            throw new DomainException("A categoria não pode ser nula.");
+
+        if (this.Categoria == novaCategoria)
             return;
 
-        if (!CategoriaPolicy.CategoriaEhCompativel(novaCategoria, Tipo))
+        if (!novaCategoria.EhCompativelCom(this.Tipo))
             throw new DomainException("Categoria incompatível com o tipo da movimentação.");
 
-        var categoriaAntiga = Categoria;
-        Categoria = novaCategoria;
+        this.Categoria = novaCategoria;
 
         AddDomainEvent(new MovimentacaoReclassificadaEvent(
             Id,
             UsuarioId,
-            categoriaAntiga,
-            novaCategoria
+            novaCategoria.Id
         ));
     }
 
-    private void DefinirCategoria(CategoriaEnum categoria)
+    private void DefinirCategoria(Categoria categoria)
     {
-        if (!CategoriaPolicy.CategoriaEhCompativel(categoria, Tipo))
-            throw new DomainException("Categoria incompatível com o tipo da movimentação.");
+        if (categoria == null)
+            throw new DomainException("A categoria não pode ser nula.");
 
-        Categoria = categoria;
+        if (categoria.Tipo != this.Tipo)
+        {
+            throw new DomainException($"A categoria '{categoria.Descricao}' é incompatível com o tipo da movimentação ({this.Tipo}).");
+        }
+
+        this.CategoriaId = categoria.Id;
     }
     private void DefinirOrcamentoId(int orcamentoId)
     {

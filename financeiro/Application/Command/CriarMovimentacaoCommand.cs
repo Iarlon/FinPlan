@@ -11,5 +11,5 @@ TipoMovimentacaoEnum Tipo,
 string? Descricao,
 string? Tag,
 DateTime DataMovimentacao,
-CategoriaEnum Categoria
+int Categoria
 ) : IRequest<long>;

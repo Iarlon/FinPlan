@@ -27,15 +27,15 @@ public class CriarMovimentacaoHandler
         _orcamentoRepo = orcamentoRepo;
     }
 
-    public async Task<long> Handle(CriarMovimentacaoCommand command, CancellationToken ct)
+    public async Task<long> Handle(CriarMovimentacaoCommand request, CancellationToken ct)
     {
-        var usuario = await _usuarioRepo.ObterUsuarioPorId(command.UsuarioId);
+        var usuario = await _usuarioRepo.ObterUsuarioPorId(request.UsuarioId);
         if (usuario is null)
-            throw new NotFoundException("Usuario", command.UsuarioId);
+            throw new NotFoundException("Usuario", request.UsuarioId);
 
-        var categoria = await _categoriaRepo.ObterCategoriaPorId((int)command.Categoria);
+        var categoria = await _categoriaRepo.ObterCategoriaPorId((int)request.Categoria);
         if (categoria is null)
-            throw new NotFoundException("Categoria", command.Categoria);
+            throw new NotFoundException("Categoria", request.Categoria);
         var movimentacao = Movimentacao.CriarMovimentacao(
             command.Valor,
             command.Categoria,
