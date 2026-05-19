@@ -14,16 +14,15 @@ public class MovimentacaoRepository : IMovimentacaoRepository
     public Task AdicionarMovimentacao(Movimentacao movimentacao)
     {
         var sql = @"
-            INSERT INTO MOVIMENTACAO (descricao, valor, data, tipo_id, categoria_id)
-            VALUES (@Descricao, @Valor, @Data, @Tipo, @Categoria);
+            INSERT INTO MOVIMENTACAO (descricao, valor, data, categoria_id)
+            VALUES (@Descricao, @Valor, @Data, @Categoria);
         ";
         return _uow.Connection.ExecuteAsync(sql, new
         {
             movimentacao.Descricao,
             movimentacao.Valor,
             movimentacao.DataMovimentacao,
-            Tipo = (int)movimentacao.Tipo,
-            Categoria = (int)movimentacao.Categoria
+            movimentacao.CategoriaId
         }, _uow.Transaction);
     }
 
@@ -42,8 +41,7 @@ public class MovimentacaoRepository : IMovimentacaoRepository
             SET descricao = @Descricao,
                 valor = @Valor,
                 data_movimentacao = @DataMovimentacao,
-                tipo_id = @Tipo,
-                categoria_id = @Categoria,
+                categoria_id = @CategoriaId,
                 tag = @Tag,
                 usuario_id = @UsuarioId,
                 orcamento_id = @OrcamentoId
@@ -55,8 +53,7 @@ public class MovimentacaoRepository : IMovimentacaoRepository
             movimentacao.Descricao,
             movimentacao.Valor,
             movimentacao.DataMovimentacao,
-            Tipo = (int)movimentacao.Tipo,
-            Categoria = (int)movimentacao.Categoria,
+            movimentacao.CategoriaId,
             movimentacao.Id,
             movimentacao.Tag,
             movimentacao.UsuarioId,

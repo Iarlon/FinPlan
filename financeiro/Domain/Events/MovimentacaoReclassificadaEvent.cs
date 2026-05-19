@@ -7,13 +7,13 @@ public class MovimentacaoReclassificadaEvent : IDomainEvent
 {
     public long MovimentacaoId { get; }
     public int UsuarioId { get; }
-    public int CategoriaNovaId { get; }
+    public long CategoriaNovaId { get; }
     public DateTime OccurredOn { get; }
 
     public MovimentacaoReclassificadaEvent(
         long movimentacaoId,
         int usuarioId,
-        int categoriaNovaId)
+        long categoriaNovaId)
     {
         MovimentacaoId = movimentacaoId;
         UsuarioId = usuarioId;

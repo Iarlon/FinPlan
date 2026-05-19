@@ -1,5 +1,4 @@
-﻿using financeiro.Infraestructure.Database;
-using Microsoft.Extensions.Configuration;
+using financeiro.Infraestructure.Database;
 using Npgsql;
 using System.Data;
 
@@ -14,7 +13,9 @@ public class NpgsqlConnectionFactory : IDbConnectionFactory
 
     public IDbConnection CreateConnection()
     {
-        return new NpgsqlConnection(
-            _configuration.GetConnectionString("Default"));
+        var connectionString = _configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' não foi encontrada.");
+
+        return new NpgsqlConnection(connectionString);
     }
 }

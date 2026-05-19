@@ -13,6 +13,8 @@ public class MovimentacaoController : ControllerBase
 {
 
     private readonly IMediator _mediator;
+    public MovimentacaoController(IMediator mediator) => _mediator = mediator;
+    
     [HttpPost]
     public async Task<ActionResult> Criar([FromBody] CriarMovimentacaoRequest request)
     {
@@ -27,7 +29,7 @@ public class MovimentacaoController : ControllerBase
             request.Descricao,
             request.Tag,
             request.DataMovimentacao,
-            request.Categoria);
+            request.CategoriaId);
 
         var id = await _mediator.Send(command);
 

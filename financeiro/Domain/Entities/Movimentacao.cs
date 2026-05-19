@@ -13,9 +13,9 @@ public class Movimentacao : Entity
     public string? Tag { get; private set; }
     public string? Descricao { get; private set; }
     public decimal Valor { get; private set; }
-    public Categoria Categoria { get; private set; }
+    public Categoria CategoriaId { get; private set; }
     public DateTime DataMovimentacao { get; private set; }
-    public TipoMovimentacaoEnum Tipo { get; private set; }
+    public TipoMovimentacaoEnum Tipo => CategoriaId.Tipo;
 
     public Movimentacao(
         decimal valor,
@@ -42,7 +42,6 @@ public class Movimentacao : Entity
         Categoria categoria,
         int orcamentoId,
         int usuarioId,
-        TipoMovimentacaoEnum tipo,
         string? descricao,
         string? tag)
     {
@@ -94,13 +93,10 @@ public class Movimentacao : Entity
         if (novaCategoria == null)
             throw new DomainException("A categoria não pode ser nula.");
 
-        if (this.Categoria == novaCategoria)
+        if (CategoriaId == novaCategoria)
             return;
 
-        if (!novaCategoria.EhCompativelCom(this.Tipo))
-            throw new DomainException("Categoria incompatível com o tipo da movimentação.");
-
-        this.Categoria = novaCategoria;
+        CategoriaId = novaCategoria;
 
         AddDomainEvent(new MovimentacaoReclassificadaEvent(
             Id,
@@ -114,12 +110,12 @@ public class Movimentacao : Entity
         if (categoria == null)
             throw new DomainException("A categoria não pode ser nula.");
 
-        if (categoria.Tipo != this.Tipo)
+        if (categoria.Tipo != Tipo)
         {
-            throw new DomainException($"A categoria '{categoria.Descricao}' é incompatível com o tipo da movimentação ({this.Tipo}).");
+            throw new DomainException($"A categoria '{categoria.Descricao}' é incompatível com o tipo da movimentação ({Tipo}).");
         }
 
-        this.CategoriaId = categoria.Id;
+        CategoriaId = categoria;
     }
     private void DefinirOrcamentoId(int orcamentoId)
     {
@@ -127,14 +123,5 @@ public class Movimentacao : Entity
             throw new DomainException("Orçamento inválido para a movimentação.");
 
         OrcamentoId = orcamentoId;
-
-    }
-
-    public void AlterarTipo(TipoMovimentacaoEnum tipo)
-    {
-        if (!CategoriaPolicy.CategoriaEhCompativel(Categoria, tipo))
-            throw new DomainException("Tipo incompatível com a categoria.");
-
-        Tipo = tipo;
     }
 }

@@ -1,26 +1,22 @@
 using Financeiro.Domain.Enums;
+using Financeiro.Domain.Exceptions;
 
 namespace Financeiro.Domain.Entities;
 
 public class Categoria
 {
-    public int Id { get; private set; }
+    public long Id { get; private set; }
     public string Descricao { get; private set; }
-    public bool EhReceita { get; private set; }
+    public TipoMovimentacaoEnum Tipo { get; private set; }
 
-    public Categoria(int id, string descricao, bool ehReceita)
+    public bool EhReceita => Tipo == TipoMovimentacaoEnum.receita;
+
+    public Categoria(string descricao, TipoMovimentacaoEnum tipo)
     {
-        Id = id;
-        Descricao = descricao;
-        EhReceita = ehReceita;
-    }
+        if (string.IsNullOrWhiteSpace(descricao))
+            throw new DomainException("Descrição da categoria é obrigatória.");
 
-    public TipoMovimentacaoEnum Tipo => EhReceita
-        ? TipoMovimentacaoEnum.receita
-        : TipoMovimentacaoEnum.despesa;
-
-    public bool EhCompativelCom(TipoMovimentacaoEnum tipoMovimentacao)
-    {
-        return this.Tipo == tipoMovimentacao;
+        Descricao = descricao.Trim();
+        Tipo = tipo;
     }
 }

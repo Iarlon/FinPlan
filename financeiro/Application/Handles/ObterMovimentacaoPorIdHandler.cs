@@ -29,7 +29,7 @@ public class ObterMovimentacaoPorIdHandler
             mov.Valor,
             mov.Tipo.ToString(),
             mov.Descricao,
-            mov.Categoria.ToString(),
+            mov.CategoriaId.ToString(),
             mov.DataMovimentacao);
     }
 }

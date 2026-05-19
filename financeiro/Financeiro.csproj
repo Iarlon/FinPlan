@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Infraestructure\Database\Scripts\**\*.sql" />
+	  <EmbeddedResource Include="Infraestructure\Database\Scripts\*.sql" />
   </ItemGroup>
 
   <ItemGroup>

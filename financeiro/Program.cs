@@ -16,7 +16,7 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 
-// Configure PostgreSQL connection
+// Busca connection
 var connectionString =
     builder.Configuration.GetConnectionString("DefaultConnection");
 

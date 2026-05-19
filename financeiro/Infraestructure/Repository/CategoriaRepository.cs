@@ -1,5 +1,7 @@
 using Dapper;
+using Financeiro.Domain.Entities;
 using Financeiro.Domain.Enums;
+using Financeiro.Domain.Model;
 using Financeiro.Domain.Repository;
 using Financeiro.Infraestructure.Database;
 
@@ -7,15 +9,22 @@ namespace Financeiro.Infraestructure.Repository;
 
 public class CategoriaRepository : ICategoriaRepository
 {
-        private readonly IUnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
     
-        public CategoriaRepository(IUnitOfWork uow) => _uow = uow;
+    public CategoriaRepository(IUnitOfWork uow) => _uow = uow;
     
-        public Task<CategoriaEnum?> ObterCategoriaPorId(int id)
-        {
-            var sql = @"
-                SELECT id, nome, eh_receita AS EhReceita FROM categorias WHERE id = @Id
-            ";
-            return _uow.Connection.QueryFirstOrDefaultAsync<CategoriaEnum?>(sql, new { Id = id }, _uow.Transaction);
+    public Task<Categoria> ObterCategoriaPorId(int id)
+    {
+        var sql = @"
+            SELECT id, descricao, tipo_movimentacao_id::int AS tipo FROM categoria WHERE id = @Id
+        ";
+        return _uow.Connection.QueryFirstOrDefaultAsync<Categoria>(sql, new { Id = id }, _uow.Transaction);
+    }
+    public Task<IEnumerable<CategoriaReadModel>> ObterCategorias()
+    {
+        var sql = @"
+            SELECT id, descricao, tipo_movimentacao_id::int AS tipo FROM categoria
+        ";
+        return _uow.Connection.QueryAsync<CategoriaReadModel>(sql, transaction: _uow.Transaction);
     }
 }
