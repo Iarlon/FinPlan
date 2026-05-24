@@ -1,5 +1,6 @@
 namespace Financeiro.Application;
 
+using Financeiro.Application.Service;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,8 @@ public static class DependencyInjection
                 cfg.TypeEvaluator = type => !IsRecord(type);
             };
         services.AddMediatR(configuration);
+
+        services.AddScoped<TokenService, TokenService>();
 
         return services;
     }

@@ -1,5 +1,6 @@
 using financeiro.Infraestructure.Database;
 using Financeiro.Application;
+using Financeiro.Infraestructure.Configuration;
 using Financeiro.Infraestructure.Database;
 using Financeiro.Infrastructure;
 using Npgsql;
@@ -18,7 +19,8 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Busca connection
 var connectionString =
-    builder.Configuration.GetConnectionString("DefaultConnection");
+    builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new Exception("Connection string não encontrada.");
 
 var app = builder.Build();
 
@@ -30,8 +32,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionMiddleware>();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapControllers();
 

@@ -1,8 +1,16 @@
-﻿namespace financeiro.Domain.Request;
+using System.ComponentModel.DataAnnotations;
+
+namespace financeiro.Domain.Request;
 
 public class CriarUsuarioRequest
 {
-    public string? Nome { get; set; }
-    public string? Email { get; set; }
-    public string? Senha { get; set; }
+    [Required]
+    public string Nome { get; set; } = string.Empty;
+
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
+
+    [Required]
+    public string Senha { get; set; } = string.Empty;
 }
