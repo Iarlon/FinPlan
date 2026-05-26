@@ -1,10 +1,12 @@
 using Financeiro.Application.Queries;
 using Financeiro.Application.Response;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Financeiro.Application.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("categorias")]
 public class CategoriaController : ControllerBase

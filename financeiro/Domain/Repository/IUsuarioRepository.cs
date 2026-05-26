@@ -9,6 +9,6 @@ public interface IUsuarioRepository
     Task CriarUsuario(Usuario usuario);
 
     Task AtualizarUsuario(Usuario usuario);
-    Task<UsuarioModel> ObterUsuarioPorId(int id);
-    Task<UsuarioModel> ObterUsuarioPorEmail(string email);
+    Task<Usuario> ObterUsuarioPorId(long id);
+    Task<Usuario> ObterUsuarioPorEmail(string email);
 }

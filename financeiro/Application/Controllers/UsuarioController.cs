@@ -1,7 +1,5 @@
 using financeiro.Domain.Request;
 using Financeiro.Application.Command;
-using Financeiro.Application.Handles;
-using Financeiro.Domain.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

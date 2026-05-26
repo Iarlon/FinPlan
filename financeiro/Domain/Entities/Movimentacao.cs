@@ -8,20 +8,20 @@ namespace Financeiro.Domain.Entities;
 public class Movimentacao : Entity
 {
     public long Id { get; private set; }
-    public int UsuarioId { get; private set; }
-    public int OrcamentoId {  get; private set; }
+    public long UsuarioId { get; private set; }
+    public long OrcamentoId {  get; private set; }
     public string? Tag { get; private set; }
     public string? Descricao { get; private set; }
     public decimal Valor { get; private set; }
-    public Categoria CategoriaId { get; private set; }
+    public Categoria Categoria { get; private set; }
     public DateTime DataMovimentacao { get; private set; }
-    public TipoMovimentacaoEnum Tipo => CategoriaId.Tipo;
+    public TipoMovimentacaoEnum Tipo => Categoria.Tipo;
 
     public Movimentacao(
         decimal valor,
         Categoria categoria,
-        int orcamentoId,
-        int usuarioId,
+        long orcamentoId,
+        long usuarioId,
         string? Descricao,
         string? Tag
         )
@@ -40,12 +40,19 @@ public class Movimentacao : Entity
     public static Movimentacao CriarMovimentacao(
         decimal valor,
         Categoria categoria,
-        int orcamentoId,
-        int usuarioId,
+        long orcamentoId,
+        long usuarioId,
         string? descricao,
         string? tag)
     {
         return new Movimentacao(valor, categoria, orcamentoId, usuarioId, descricao, tag);
+    }
+    public void DefinirId(long id)
+    {
+        if (id <= 0)
+            throw new DomainException("Id inválido.");
+
+        Id = id;
     }
     public void AlterarTag(string tag)
     {
@@ -80,7 +87,7 @@ public class Movimentacao : Entity
         DataMovimentacao = data ?? DateTime.UtcNow;
     }
 
-    private void DefinirUsuarioId(int orcamentoId)
+    private void DefinirUsuarioId(long orcamentoId)
     {
         if (orcamentoId <= 0)
             throw new DomainException("Não foi encontrado usuário para essa movimentação.");
@@ -93,10 +100,10 @@ public class Movimentacao : Entity
         if (novaCategoria == null)
             throw new DomainException("A categoria não pode ser nula.");
 
-        if (CategoriaId == novaCategoria)
+        if (Categoria == novaCategoria)
             return;
 
-        CategoriaId = novaCategoria;
+        Categoria = novaCategoria;
 
         AddDomainEvent(new MovimentacaoReclassificadaEvent(
             Id,
@@ -107,17 +114,17 @@ public class Movimentacao : Entity
 
     private void DefinirCategoria(Categoria categoria)
     {
-        if (categoria == null)
+        if (categoria is null)
             throw new DomainException("A categoria não pode ser nula.");
 
-        if (categoria.Tipo != Tipo)
-        {
-            throw new DomainException($"A categoria '{categoria.Descricao}' é incompatível com o tipo da movimentação ({Tipo}).");
-        }
+        if (Categoria != null && categoria.Tipo != Categoria.Tipo)
+            throw new DomainException(
+                $"Categoria '{categoria.Descricao}' é incompatível."
+            );
 
-        CategoriaId = categoria;
+        Categoria = categoria;
     }
-    private void DefinirOrcamentoId(int orcamentoId)
+    private void DefinirOrcamentoId(long orcamentoId)
     {
         if (orcamentoId <= 0)
             throw new DomainException("Orçamento inválido para a movimentação.");

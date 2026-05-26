@@ -19,17 +19,25 @@ public class UsuarioRepository : IUsuarioRepository
     public async Task CriarUsuario(Usuario usuario)
     {
         var sql = @"
-            INSERT INTO USUARIO (nome, email, senha)
-            VALUES (@Nome, @Email, @Senha)";
-        await _uow.Connection.ExecuteAsync(sql, usuario, _uow.Transaction);
+        INSERT INTO usuario (nome, email, senha)
+        VALUES (@Nome, @Email, @Senha)
+        RETURNING id;
+        ";
+
+        var id = await _uow.Connection.ExecuteScalarAsync<long>(
+            sql,
+            usuario,
+            _uow.Transaction);
+
+        usuario.DefinirId(id);
     }
-    public async Task<UsuarioModel> ObterUsuarioPorEmail(string email)
+    public async Task<Usuario> ObterUsuarioPorEmail(string email)
     {
         var sql = @"
-            SELECT U.NOME, U.EMAIL, U.SENHA AS SenhaHash
+            SELECT U.ID, U.NOME, U.EMAIL, U.SENHA
             FROM USUARIO U WHERE U.EMAIL = @Email";
         var usuario = await _uow.Connection
-            .QueryFirstOrDefaultAsync<UsuarioModel>(
+            .QueryFirstOrDefaultAsync<Usuario>(
             sql,
             new { Email = email },
             _uow.Transaction);
@@ -67,12 +75,12 @@ public class UsuarioRepository : IUsuarioRepository
         await _uow.Connection.ExecuteAsync(sql, usuario, _uow.Transaction);
     }
 
-    public async Task<UsuarioModel> ObterUsuarioPorId(int id)
+    public async Task<Usuario> ObterUsuarioPorId(long id)
     {
         var sql = @"SELECT * FROM USUARIO WHERE ID = @Id";
 
        
-        var usuario = await _uow.Connection.QueryFirstOrDefaultAsync<UsuarioModel>(sql, new { Id = id }, _uow.Transaction);
+        var usuario = await _uow.Connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { Id = id }, _uow.Transaction);
 
         return usuario;
     }

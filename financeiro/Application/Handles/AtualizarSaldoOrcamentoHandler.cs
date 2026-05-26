@@ -4,12 +4,12 @@ using Financeiro.Domain.Repository;
 
 namespace Financeiro.Application.Handles;
 
-public class AtualizarSaldoContaOrcamentoHandler
+public class AtualizarSaldoOrcamentoHandler
     : IDomainEventHandler<MovimentacaoCriadaEvent>
 {
     private readonly IOrcamentoRepository _orcamentoRepository;
 
-    public AtualizarSaldoContaOrcamentoHandler(IOrcamentoRepository orcamentoRepository)
+    public AtualizarSaldoOrcamentoHandler(IOrcamentoRepository orcamentoRepository)
     {
         _orcamentoRepository = orcamentoRepository;
     }

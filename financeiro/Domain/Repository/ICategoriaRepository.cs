@@ -1,6 +1,6 @@
 using Financeiro.Domain.Entities;
 using Financeiro.Domain.Enums;
-using Financeiro.Domain.Model;
+using Financeiro.Infraestructure.Model;
 
 namespace Financeiro.Domain.Repository;
 

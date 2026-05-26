@@ -3,7 +3,6 @@ using financeiro.Domain.Repository;
 using Financeiro.Application.Command;
 using Financeiro.Application.Contract;
 using Financeiro.Application.Response;
-using Financeiro.Domain.Entities;
 using Financeiro.Domain.Exceptions;
 using MediatR;
 
@@ -30,24 +29,18 @@ public class LoginHandler
         LoginCommand request,
         CancellationToken cancellationToken)
     {
-        var usuarioModel =
+        var usuario =
             await _usuarioRepository.ObterUsuarioPorEmail(
                 request.Email);
 
-        if (usuarioModel is null ||
+        if (usuario is null ||
             !_hashService.VerificarHash(
                 request.Senha,
-                usuarioModel.SenhaHash))
+                usuario.Senha))
         {
             throw new DomainException(
                 "Usuário ou senha inválidos.");
         }
-
-        var usuario = new Usuario(
-            usuarioModel.Nome,
-            usuarioModel.Email,
-            usuarioModel.SenhaHash
-            );
 
         var token = _tokenService.GerarToken(usuario);
 

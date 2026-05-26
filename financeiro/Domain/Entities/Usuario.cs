@@ -1,4 +1,4 @@
-﻿using Financeiro.Domain.Exceptions;
+using Financeiro.Domain.Exceptions;
 
 namespace Financeiro.Domain.Entities;
 
@@ -8,6 +8,8 @@ public class Usuario
     public string Nome { get; private set; }
     public string Email { get; private set; }
     public string Senha { get; private set; }
+
+    public Usuario() { }
 
     public Usuario(string nome, string email, string senha)
     {
@@ -35,5 +37,12 @@ public class Usuario
         if (string.IsNullOrWhiteSpace(nome))
             throw new DomainException("O nome não pode ser vazio.");
         Nome = nome;
+    }
+    public void DefinirId(long id)
+    {
+        if (id <= 0)
+            throw new DomainException("Id inválido.");
+
+        Id = id;
     }
 }

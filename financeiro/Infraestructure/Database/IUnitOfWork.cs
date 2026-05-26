@@ -1,3 +1,4 @@
+using financeiro.Domain.Common;
 using financeiro.Infraestructure.Database;
 using System.Data;
 
@@ -10,4 +11,5 @@ public interface IUnitOfWork : IDisposable
 
     Task CommitAsync();
     Task RollbackAsync();
+    void TrackEntity(Entity entity);
 }

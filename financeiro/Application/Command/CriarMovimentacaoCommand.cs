@@ -4,8 +4,7 @@ using MediatR;
 namespace Financeiro.Application.Command;
 
 public record CriarMovimentacaoCommand(
-int OrcamentoId,
-int UsuarioId,
+long UsuarioId,
 decimal Valor,
 TipoMovimentacaoEnum Tipo,
 string? Descricao,

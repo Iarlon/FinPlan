@@ -11,5 +11,6 @@ public class MovimentacaoCriadaEvent : IDomainEvent
     public MovimentacaoCriadaEvent(Movimentacao movimentacao)
     {
         Movimentacao = movimentacao;
+        OccurredOn = DateTime.UtcNow;
     }
 }

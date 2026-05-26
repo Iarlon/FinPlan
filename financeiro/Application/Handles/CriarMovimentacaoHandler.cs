@@ -4,6 +4,7 @@ using Financeiro.Application.Command;
 using financeiro.Domain.Repository;
 using Financeiro.Domain.Entities;
 using Financeiro.Application.Exceptions;
+using Financeiro.Infraestructure.Database;
 
 namespace Financeiro.Application.Handles;
 
@@ -14,13 +15,16 @@ public class CriarMovimentacaoHandler
     private readonly IUsuarioRepository _usuarioRepo;
     private readonly ICategoriaRepository _categoriaRepo;
     private readonly IOrcamentoRepository _orcamentoRepo;
+    private readonly IUnitOfWork _uow;
 
     public CriarMovimentacaoHandler(
+        IUnitOfWork uow,
         IMovimentacaoRepository movimentacaoRepo,
         IUsuarioRepository usuarioRepo,
         ICategoriaRepository categoriaRepo,
         IOrcamentoRepository orcamentoRepo)
     {
+        _uow = uow;
         _movimentacaoRepo = movimentacaoRepo;
         _usuarioRepo = usuarioRepo;
         _categoriaRepo = categoriaRepo;
@@ -33,19 +37,24 @@ public class CriarMovimentacaoHandler
         if (usuario is null)
             throw new NotFoundException("Usuario", request.UsuarioId);
 
-        var categoria = await _categoriaRepo.ObterCategoriaPorId(request.CategoriaId);
-        if (categoria is null)
+        var categoriaId = await _categoriaRepo.ObterCategoriaPorId(request.CategoriaId);
+        if (categoriaId is null)
             throw new NotFoundException("Categoria", request.CategoriaId);
+
+        var orcamentoId =
+            await _orcamentoRepo.ObterOuCriarOrcamentoId(request.UsuarioId);
+
         var movimentacao = Movimentacao.CriarMovimentacao(
             request.Valor,
-            categoria,
-            request.OrcamentoId,
+            categoriaId,
+            orcamentoId,
             request.UsuarioId,
             request.Tag,
             request.Descricao
             );
 
         await _movimentacaoRepo.AdicionarMovimentacao(movimentacao);
+        await _uow.CommitAsync();
 
         return movimentacao.Id;
     }

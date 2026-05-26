@@ -6,11 +6,11 @@ using MediatR;
 
 namespace Financeiro.Application.Handles;
 
-public class ObterCategorias : IRequestHandler<ObterCategoriasQuery, IEnumerable<CategoriaResponse>>
+public class ObterCategoriasHandler : IRequestHandler<ObterCategoriasQuery, IEnumerable<CategoriaResponse>>
 {
     private readonly ICategoriaRepository _repository;
 
-    public ObterCategorias(ICategoriaRepository repository) => _repository = repository;
+    public ObterCategoriasHandler(ICategoriaRepository repository) => _repository = repository;
     public async Task<IEnumerable<CategoriaResponse>> Handle(ObterCategoriasQuery request, CancellationToken cancellationToken)
     {
         var categorias = await _repository.ObterCategorias();

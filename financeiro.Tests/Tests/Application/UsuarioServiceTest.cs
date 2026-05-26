@@ -68,4 +68,125 @@ public class UsuarioServiceTest
             "E-mail já cadastrado.",
             exception.Message);
     }
+
+    [Fact]
+    public async Task
+        CriarUsuario_ValorValido_DeveRetornarIdDoUsuario()
+    {
+        // Arrange
+
+        var command = new CriarUsuarioCommand(
+            "Iarlon",
+            "ialon@email.com",
+            "123456");
+
+        _usuarioRepositoryMock
+            .Setup(x =>
+                x.EmailJaExiste(command.Email))
+            .ReturnsAsync(false);
+
+        _hashServiceMock
+            .Setup(x =>
+                x.GerarHash(command.Senha))
+            .Returns("senhaHashada");
+
+        _uowMock
+            .Setup(x =>
+                x.CommitAsync())
+            .Returns(Task.CompletedTask);
+
+        // Act
+
+        var result = await _handler.Handle(
+            command,
+            CancellationToken.None);
+
+        // Assert
+
+        Assert.Equal(0, result);
+        _usuarioRepositoryMock.Verify(
+            x => x.CriarUsuario(It.IsAny<Financeiro.Domain.Entities.Usuario>()),
+            Times.Once);
+        _uowMock.Verify(
+            x => x.CommitAsync(),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task
+        CriarUsuario_UsuarioValido_DeveGerarHashDaSenha()
+    {
+        // Arrange
+
+        var command = new CriarUsuarioCommand(
+            "Iarlon",
+            "ialon@email.com",
+            "123456");
+
+        _usuarioRepositoryMock
+            .Setup(x =>
+                x.EmailJaExiste(command.Email))
+            .ReturnsAsync(false);
+
+        _hashServiceMock
+            .Setup(x =>
+                x.GerarHash(command.Senha))
+            .Returns("senhaHashada");
+
+        _uowMock
+            .Setup(x =>
+                x.CommitAsync())
+            .Returns(Task.CompletedTask);
+
+        // Act
+
+        await _handler.Handle(
+            command,
+            CancellationToken.None);
+
+        // Assert
+
+        _hashServiceMock.Verify(
+            x => x.GerarHash(command.Senha),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task
+        CriarUsuario_UsuarioValido_DeveCommitarTransacao()
+    {
+        // Arrange
+
+        var command = new CriarUsuarioCommand(
+            "João",
+            "joao@email.com",
+            "senha123");
+
+        _usuarioRepositoryMock
+            .Setup(x =>
+                x.EmailJaExiste(command.Email))
+            .ReturnsAsync(false);
+
+        _hashServiceMock
+            .Setup(x =>
+                x.GerarHash(It.IsAny<string>()))
+            .Returns("hash");
+
+        _uowMock
+            .Setup(x =>
+                x.CommitAsync())
+            .Returns(Task.CompletedTask);
+
+        // Act
+
+        await _handler.Handle(
+            command,
+            CancellationToken.None);
+
+        // Assert
+
+        _uowMock.Verify(
+            x => x.CommitAsync(),
+            Times.Once);
+    }
 }

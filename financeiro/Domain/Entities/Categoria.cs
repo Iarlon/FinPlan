@@ -9,8 +9,10 @@ public class Categoria
     public string Descricao { get; private set; }
     public TipoMovimentacaoEnum Tipo { get; private set; }
 
-    public bool EhReceita => Tipo == TipoMovimentacaoEnum.receita;
+    public Categoria()
+    {
 
+    }
     public Categoria(string descricao, TipoMovimentacaoEnum tipo)
     {
         if (string.IsNullOrWhiteSpace(descricao))

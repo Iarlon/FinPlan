@@ -29,14 +29,22 @@ public class ExceptionMiddleware
 
             await context.Response.WriteAsJsonAsync(response);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             context.Response.StatusCode = 500;
             context.Response.ContentType = "application/json";
 
             await context.Response.WriteAsJsonAsync(new
             {
-                erro = "Erro interno."
+                success = false,
+                error = new
+                {
+                    code = "internal_server_error",
+                    message = ex.Message,
+                    detail = ex.InnerException?.Message,
+                    stackTrace = ex.StackTrace
+                },
+                timestamp = DateTime.UtcNow
             });
         }
     }

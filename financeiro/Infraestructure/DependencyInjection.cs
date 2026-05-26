@@ -1,8 +1,10 @@
-using financeiro.Domain.Common;
+using financeiro.Application.Contract;
 using financeiro.Infraestructure.Database;
+using financeiro.Infraestructure.Events;
 using Financeiro.Infraestructure.Database;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Financeiro.Infrastructure;
 
@@ -12,6 +14,8 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
         services.AddSingleton<IDbConnectionFactory, NpgsqlConnectionFactory>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -25,6 +29,26 @@ public static class DependencyInjection
             )
             .AsImplementedInterfaces()
             .WithScopedLifetime());
+        var key = configuration["Jwt:Key"];
+
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(key!))
+                };
+            });
 
         return services;
     }

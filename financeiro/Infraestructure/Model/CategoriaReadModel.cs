@@ -1,4 +1,4 @@
-namespace Financeiro.Domain.Model;
+namespace Financeiro.Infraestructure.Model;
 
 public class CategoriaReadModel
 {

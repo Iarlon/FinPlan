@@ -1,5 +1,0 @@
-CREATE TABLE orcamento (
-	id BIGSERIAL PRIMARY KEY,
-	Descricao VARCHAR(255) NOT NULL,
-	Valor DECIMAL(18, 2) NOT NULL
-);

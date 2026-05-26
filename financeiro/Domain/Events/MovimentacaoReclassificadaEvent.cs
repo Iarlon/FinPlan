@@ -6,13 +6,13 @@ namespace financeiro.Domain.Events;
 public class MovimentacaoReclassificadaEvent : IDomainEvent
 {
     public long MovimentacaoId { get; }
-    public int UsuarioId { get; }
+    public long UsuarioId { get; }
     public long CategoriaNovaId { get; }
     public DateTime OccurredOn { get; }
 
     public MovimentacaoReclassificadaEvent(
         long movimentacaoId,
-        int usuarioId,
+        long usuarioId,
         long categoriaNovaId)
     {
         MovimentacaoId = movimentacaoId;
