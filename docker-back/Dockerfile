@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /financeiro
 
 
-COPY financeiro/financeiro.csproj ./
+COPY financeiro/Financeiro.csproj ./
 RUN dotnet restore
 
 COPY financeiro ./
@@ -15,4 +15,4 @@ COPY --from=build-env /financeiro/out .
 USER $APP_UID
 
 EXPOSE 80
-ENTRYPOINT ["dotnet", "financeiro.dll"]
+ENTRYPOINT ["dotnet", "Financeiro.dll"]

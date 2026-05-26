@@ -9,6 +9,29 @@ using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuração de CORS com suporte a desenvolvimento e produção
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()    // Permite qualquer origem (IP do celular, emulador, etc)
+              .AllowAnyMethod()    // Permite GET, POST, PUT, DELETE e o OPTIONS
+              .AllowAnyHeader();   // Permite qualquer cabeçalho (como Content-Type e Authorization)
+    });
+
+    // Política mais restritiva para produção (recomendado)
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
+            ?? new[] { "http://localhost:3000", "http://localhost:8080" };
+
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -46,6 +69,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddApplication();
@@ -64,11 +88,15 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("AllowAll");
+}
+else
+{
+    app.UseCors("AllowSpecificOrigins");
 }
 
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
-
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -76,4 +104,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 MigrationRunner.Run(connectionString);
-app.Run();
+app.Run("http://0.0.0.0:8080");
