@@ -1,14 +1,34 @@
-﻿# Projeto Financeiro
+﻿﻿# Projeto Financeiro
 
 Este é um projeto de gestão financeira desenvolvido em C#/.NET. A aplicação foi estruturada focando em boas práticas de engenharia de software, utilizando princípios de separação de responsabilidades, como **Domain-Driven Design (DDD)** e **Clean Architecture**.
+Está disponível no link = http://planfin.tech
 
 <img src="http://localhost:9000/api/project_badges/measure?project=projetoLocal&metric=alert_status&token=sqb_7f12579150574b1eadbd6f3494d0c494d015f702">
 
+## 🏗️ Arquitetura e Padrões de Projeto
+
+O projeto foi construído seguindo os princípios da **Clean Architecture** e **Domain-Driven Design (DDD)**, utilizando os seguintes padrões:
+
+*   **DDD (Domain-Driven Design):** Divisão clara em camadas de Domain, Application e Infrastructure. Entidades ricas com validações internas (ex: `Meta`, `Movimentacao`).
+*   **CQRS (Command Query Responsibility Segregation):** Separação das operações de leitura e escrita para escalabilidade e clareza.
+*   **MediatR:** Utilizado para desacoplamento de componentes através do padrão Mediator, facilitando a implementação de comandos e consultas.
+*   **Domain Events:** Notificação de mudanças de estado dentro do domínio (ex: `MovimentacaoCriadaEvent`), permitindo efeitos colaterais de forma desacoplada.
+*   **Repository Pattern:** Abstração da camada de dados para facilitar a testabilidade e troca de provedores de persistência.
+*   **Dependency Injection:** Uso extensivo de DI nativa do .NET para gestão de ciclo de vida de objetos.
+
+### 🔒 Segurança e Infraestrutura
+
+*   **CORS (Cross-Origin Resource Sharing):** Configurado para permitir o consumo seguro da API por diferentes origens (front-end).
+*   **Containerização:** Uso de **Docker** e **Docker Compose** para orquestração de serviços e padronização do ambiente de desenvolvimento/produção.
+
 ## 🚀 Tecnologias Utilizadas
 
-* **.NET (C#)** - Plataforma e linguagem principal de desenvolvimento.
-* **xUnit** - Framework para testes unitários.
-* **Moq** - (Provavelmente) Framework para criação de mocks nos testes de serviço.
+*   **.NET 8 (C#):** Plataforma de desenvolvimento.
+*   **PostgreSQL:** Banco de dados relacional.
+*   **Docker & Docker Compose:** Containerização da aplicação e do banco de dados.
+*   **Swagger/OpenAPI:** Documentação interativa da API com suporte a JWT.
+*   **xUnit & Moq:** Frameworks para testes unitários e mocking.
+*   **FluentValidation:** Validação de inputs de forma elegante.
 
 ## 🏗️ Estrutura do Projeto
 
@@ -58,4 +78,3 @@ Para executar e contribuir com este projeto, certifique-se de ter os seguintes i
 
 ## Evidências de testes:
 <img src="./financeiro.Tests/assets/readmeImage.png" width="600">
-

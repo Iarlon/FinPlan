@@ -5,9 +5,9 @@ namespace Financeiro.Domain.Entities;
 public class Usuario
 {
     public long Id { get; private set; }
-    public string Nome { get; private set; }
-    public string Email { get; private set; }
-    public string Senha { get; private set; }
+    public required string Nome { get; private set; }
+    public required string Email { get; private set; }
+    public required string Senha { get; private set; }
 
     public Usuario() { }
 
