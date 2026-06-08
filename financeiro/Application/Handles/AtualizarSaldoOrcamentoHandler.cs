@@ -1,16 +1,20 @@
 using financeiro.Application.Contract;
 using financeiro.Domain.Events;
 using Financeiro.Domain.Repository;
+using Financeiro.Infraestructure.Database;
+using MediatR;
 
 namespace Financeiro.Application.Handles;
 
 public class AtualizarSaldoOrcamentoHandler
-    : IDomainEventHandler<MovimentacaoCriadaEvent>
+    : INotificationHandler<MovimentacaoCriadaEvent>
 {
     private readonly IOrcamentoRepository _orcamentoRepository;
+    private readonly IUnitOfWork _uow;
 
-    public AtualizarSaldoOrcamentoHandler(IOrcamentoRepository orcamentoRepository)
+    public AtualizarSaldoOrcamentoHandler(IOrcamentoRepository orcamentoRepository, IUnitOfWork uow)
     {
+        _uow = uow;
         _orcamentoRepository = orcamentoRepository;
     }
 

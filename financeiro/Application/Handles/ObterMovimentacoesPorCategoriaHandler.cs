@@ -1,6 +1,5 @@
 using Financeiro.Application.Queries;
 using Financeiro.Application.Response;
-using Financeiro.Domain.Enums;
 using Financeiro.Domain.Repository;
 using MediatR;
 
@@ -20,6 +19,11 @@ public class ObterMovimentacoesPorCategoriaHandler
         CancellationToken cancellationToken)
     {
         var mov = await _repository.ObterValorECategoria(request.UsuarioId);
-        return mov.Select(c => new MovimentacaoPorCategoriaResponse(c.Categoria, c.Valor, c.Tipo, c.DescricaoMovimentacao));
+        return mov
+        .GroupBy(m => m.Categoria)
+        .Select(grupo => new MovimentacaoPorCategoriaResponse(
+            grupo.Key,
+            grupo.Sum(x => x.ValorComSinal)
+        ));
     }
 }

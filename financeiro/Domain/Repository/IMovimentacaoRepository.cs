@@ -1,3 +1,4 @@
+using Financeiro.Application.Response;
 using Financeiro.Domain.Entities;
 using Financeiro.Infraestructure.Model;
 
@@ -10,4 +11,14 @@ public interface IMovimentacaoRepository
     Task<Movimentacao> ObterMovimentacaoPorId(long id);
     Task AtualizarMovimentacao(Movimentacao movimentacao);
     Task<IEnumerable<MovimentacaoValorDataModel>> ObterMovimentacaoPorPeriodo(long usuarioId, DateTime inicio, DateTime fim);
+    Task<IEnumerable<MovimentacaoRecenteModel>> ObterMovimentacaoRecente(long usuarioId);
+    Task<(IEnumerable<MovimentacaoHistoricoModel> Items, int TotalCount)>
+        ObterHistoricoPaginado(long usuarioId,
+        int pageNumber,
+        int pageSize,
+        long? categoriaId,
+        DateTime dataInicio,
+        DateTime dataFim,
+        int? tipoMovimentacao,
+        string? tag);
 }

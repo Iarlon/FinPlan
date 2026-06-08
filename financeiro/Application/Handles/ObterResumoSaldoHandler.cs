@@ -10,12 +10,15 @@ public class ObterResumoSaldoHandler :
     IRequestHandler<ObterResumoSaldoQuery, ResumoSaldoResponse>
 {
     private readonly IOrcamentoRepository _orcamentoRepository;
+    private readonly ICategoriaRepository _categoriaRepository;
     private readonly IMovimentacaoRepository _movimentacaoRepository;
 
     public ObterResumoSaldoHandler(
+        ICategoriaRepository categoriaRepository,
         IOrcamentoRepository orcamentoRepository,
         IMovimentacaoRepository movimentacaoRepository)
     {
+        _categoriaRepository = categoriaRepository;
         _orcamentoRepository = orcamentoRepository;
         _movimentacaoRepository = movimentacaoRepository;
     }
@@ -40,23 +43,16 @@ public class ObterResumoSaldoHandler :
         }
 
         decimal liquidoMesAtual = movimentacoesPeriodo
-            .Where(m => m.Data >= inicioMesAtual)
-            .Sum(m => m.Tipo == TipoMovimentacaoEnum.despesa ? -m.Valor : m.Valor);
+            .Where(m => m.DataMovimentacao >= inicioMesAtual)
+            .Sum(m => m.ValorComSinal);
 
         decimal liquidoMesAnterior = movimentacoesPeriodo
-            .Where(m => m.Data >= inicioMesAnterior && m.Data < inicioMesAtual)
-            .Sum(m => m.Tipo == TipoMovimentacaoEnum.despesa ? -m.Valor : m.Valor);
+            .Where(m => m.DataMovimentacao >= inicioMesAnterior && m.DataMovimentacao < inicioMesAtual)
+            .Sum(m => m.ValorComSinal);
 
-        decimal percentualVariacao = 0;
-
-        if (liquidoMesAnterior != 0)
-        {
-            percentualVariacao = ((liquidoMesAtual - liquidoMesAnterior) / Math.Abs(liquidoMesAnterior)) * 100;
-        }
-        else if (liquidoMesAtual > 0)
-        {
-            percentualVariacao = 100;
-        }
+        var percentualVariacao = liquidoMesAnterior != 0
+            ? ((liquidoMesAtual - liquidoMesAnterior) / Math.Abs(liquidoMesAnterior)) * 100
+            : liquidoMesAtual > 0 ? 100 : 0;
 
         bool tendenciaPositiva = liquidoMesAtual >= liquidoMesAnterior;
 
