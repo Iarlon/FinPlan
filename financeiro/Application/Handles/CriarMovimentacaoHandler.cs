@@ -46,12 +46,11 @@ public class CriarMovimentacaoHandler
 
         var movimentacao = Movimentacao.CriarMovimentacao(
             request.Valor,
-            request.DataMovimentacao,
             categoriaId,
             orcamentoId,
             request.UsuarioId,
-            request.Descricao,
-            request.Tag
+            request.Tag,
+            request.Descricao
             );
 
         await _movimentacaoRepo.AdicionarMovimentacao(movimentacao);

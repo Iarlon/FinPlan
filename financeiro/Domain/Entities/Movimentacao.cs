@@ -23,7 +23,6 @@ public class Movimentacao : Entity
         long orcamentoId,
         long usuarioId,
         string? Descricao,
-        DateTime DataMovimentacao,
         string? Tag
         )
     {
@@ -33,7 +32,6 @@ public class Movimentacao : Entity
         DefinirUsuarioId(usuarioId);
         DefinirDataMovimentacao(null);
         AlterarDescricao(Descricao);
-        DefinirDataMovimentacao(DataMovimentacao);
         AlterarTag(Tag);
 
         AddDomainEvent(new MovimentacaoCriadaEvent(this));
@@ -41,14 +39,13 @@ public class Movimentacao : Entity
 
     public static Movimentacao CriarMovimentacao(
         decimal valor,
-        DateTime dataMovimentacao,
         Categoria categoria,
         long orcamentoId,
         long usuarioId,
         string? descricao,
         string? tag)
     {
-        return new Movimentacao(valor, categoria, orcamentoId, usuarioId, descricao, dataMovimentacao, tag);
+        return new Movimentacao(valor, categoria, orcamentoId, usuarioId, descricao, tag);
     }
     public void DefinirId(long id)
     {
