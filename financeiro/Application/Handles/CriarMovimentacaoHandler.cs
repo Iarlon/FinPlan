@@ -46,6 +46,7 @@ public class CriarMovimentacaoHandler
 
         var movimentacao = Movimentacao.CriarMovimentacao(
             request.Valor,
+            request.DataMovimentacao,
             categoria,
             orcamento,
             request.UsuarioId,
