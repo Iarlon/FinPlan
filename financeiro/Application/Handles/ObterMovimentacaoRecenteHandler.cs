@@ -21,7 +21,7 @@ public class ObterMovimentacaoRecenteHandler : IRequestHandler<ObterMovimentacao
             m.Categoria,
             m.DataMovimentacao,
             m.DescricaoMovimentacao,
-            m.Valor,
+            m.ValorComSinal,
             m.Tag));
     }
 }
