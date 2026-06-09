@@ -31,7 +31,6 @@ public class Movimentacao : Entity
         DefinirValor(valor);
         DefinirOrcamentoId(orcamentoId);
         DefinirUsuarioId(usuarioId);
-        DefinirDataMovimentacao(null);
         AlterarDescricao(Descricao);
         DefinirDataMovimentacao(DataMovimentacao);
         AlterarTag(Tag);
