@@ -23,7 +23,7 @@ public class Movimentacao : Entity
         long orcamentoId,
         long usuarioId,
         string? Descricao,
-        DateTime DataMovimentacao,
+        DateTime dataMovimentacao,
         string? Tag
         )
     {
@@ -32,7 +32,7 @@ public class Movimentacao : Entity
         DefinirOrcamentoId(orcamentoId);
         DefinirUsuarioId(usuarioId);
         AlterarDescricao(Descricao);
-        DefinirDataMovimentacao(DataMovimentacao);
+        DefinirDataMovimentacao(dataMovimentacao);
         AlterarTag(Tag);
 
         AddDomainEvent(new MovimentacaoCriadaEvent(this));
