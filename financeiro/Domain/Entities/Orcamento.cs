@@ -9,6 +9,9 @@ public class Orcamento
     public long UsuarioId { get; private set; }
     public decimal SaldoConta { get; private set; } = decimal.Zero;
 
+    private Orcamento()
+    {
+    }
     private Orcamento(long usuarioId)
     {
         if (usuarioId <= 0)

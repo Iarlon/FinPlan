@@ -7,7 +7,6 @@ public class CriarMovimentacaoRequest
     public string? Descricao { get; set; }
     public decimal Valor { get; set; }
     public DateTime DataMovimentacao { get; set; }
-    public TipoMovimentacaoEnum Tipo { get; set; }
     public int CategoriaId { get; set; }
     public string? Tag { get; set; }
 }

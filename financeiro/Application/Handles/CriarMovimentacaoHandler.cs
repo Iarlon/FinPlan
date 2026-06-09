@@ -37,20 +37,21 @@ public class CriarMovimentacaoHandler
         if (usuario is null)
             throw new NotFoundException("Usuario", request.UsuarioId);
 
-        var categoriaId = await _categoriaRepo.ObterCategoriaPorId(request.CategoriaId);
-        if (categoriaId is null)
+        var categoria = await _categoriaRepo.ObterCategoriaPorId(request.CategoriaId);
+        if (categoria is null)
             throw new NotFoundException("Categoria", request.CategoriaId);
 
-        var orcamentoId =
+        var orcamento =
             await _orcamentoRepo.ObterOuCriarOrcamentoId(request.UsuarioId);
 
         var movimentacao = Movimentacao.CriarMovimentacao(
             request.Valor,
-            categoriaId,
-            orcamentoId,
+            request.DataMovimentacao,
+            categoria,
+            orcamento,
             request.UsuarioId,
-            request.Tag,
-            request.Descricao
+            request.Descricao,
+            request.Tag
             );
 
         await _movimentacaoRepo.AdicionarMovimentacao(movimentacao);

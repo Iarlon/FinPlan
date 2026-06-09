@@ -15,6 +15,8 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
 
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
         services.AddSingleton<IDbConnectionFactory, NpgsqlConnectionFactory>();
